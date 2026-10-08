@@ -1,3 +1,7 @@
+import { FaCaretUp, FaSortDown } from "react-icons/fa6";
+import MarqueeText from "react-marquee-text";
+import "react-marquee-text/dist/styles.css";
+
 interface IProducat {
   id: number;
   nameBn: string;
@@ -26,10 +30,29 @@ const HeadLine = async () => {
   console.log(data);
 
   return (
-    <div>
-      {data.map((prod) => {
-        return <p key={prod.id}>{prod.nameBn}</p>;
-      })}
+    <div className="flex gap-5 pl-2 bg-[#F0F5F0]">
+      <MarqueeText className="py-1" direction="right" duration={10}>
+        {data.map((prod) => {
+          return (
+            <div key={prod.id} className="flex gap-2 px-2 items-center">
+              <p>{prod.image}</p>
+              <p>{prod.nameBn}</p>
+              <div>
+                {prod.change.dir === "up" ? (
+                  <p className="flex gap-1 text-[#D03739] items-center">
+                    <FaCaretUp />
+                    {prod.change.pct}
+                  </p>
+                ) : (
+                  <p className="flex gap-1 text-green-600 items-center">
+                    <FaSortDown /> {prod.change.pct}
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </MarqueeText>
     </div>
   );
 };

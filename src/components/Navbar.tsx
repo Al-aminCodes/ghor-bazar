@@ -19,7 +19,7 @@ const Navbar = () => {
                 className="object-contain"
               />
             </div>
-            <div>
+            <div className="hidden md:block">
               <h2 className="font-bold text-2xl text-black ">বাজার দর</h2>
 
               <BanglaDate></BanglaDate>
