@@ -5,10 +5,10 @@ import Link from "next/link";
 
 const HeroSction = () => {
   return (
-    <div className="container mx-auto grid min-h-85 grid-cols-1 lg:grid-cols-2 items-center gap-10 px-4 bg-[#F3FBF4] my-7 rounded-2xl">
+    <div className="container mx-auto grid min-h-85 grid-cols-1 lg:grid-cols-2 items-center gap-10 px-4 bg-[#FFFFFF] my-7 rounded-3xl">
       {/* Left side */}
       <div className="max-w-2xl grid justify-center lg:justify-start">
-        <h4 className="mb-3 inline-block rounded-full bg-green-600 px-4 py-2 text-sm font-medium text-white">
+        <h4 className="mb-3  md:max-w-58 inline-block rounded-full bg-green-600 px-4 py-2 text-sm font-medium text-white">
           <BanglaDate />
         </h4>
 

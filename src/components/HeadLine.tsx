@@ -30,7 +30,7 @@ const HeadLine = async () => {
   console.log(data);
 
   return (
-    <div className="flex gap-5 pl-2 bg-[#F0F5F0]">
+    <div className="flex gap-5 my-2 pl-2 border-b border-gray-300 bg-[#F0F5F0]">
       <MarqueeText className="py-1" direction="right" duration={10}>
         {data.map((prod) => {
           return (
@@ -40,12 +40,12 @@ const HeadLine = async () => {
               <div>
                 {prod.change.dir === "up" ? (
                   <p className="flex gap-1 text-[#D03739] items-center">
-                    <FaCaretUp />
+                    <FaCaretUp size={12} />
                     {prod.change.pct}
                   </p>
                 ) : (
                   <p className="flex gap-1 text-green-600 items-center">
-                    <FaSortDown /> {prod.change.pct}
+                    <FaSortDown size={12} /> {prod.change.pct}
                   </p>
                 )}
               </div>

@@ -1,13 +1,14 @@
 import HeadLine from "@/components/HeadLine";
 import HeroSction from "@/components/HeroSction";
-import Image from "next/image";
+import ProductHome from "@/components/Product";
 
 export default function Home() {
   return (
     <div>
       <HeadLine />
-      <main className="container mx-auto bg-[#f0f5f0]">
+      <main className="container mx-auto ">
         <HeroSction />
+        <ProductHome />
       </main>
     </div>
   );

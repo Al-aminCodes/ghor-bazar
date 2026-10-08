@@ -6,7 +6,7 @@ import NavCategroy from "./NavCategroy";
 
 const Navbar = () => {
   return (
-    <div className="  border border-b-gray-300 ">
+    <div className="  border border-b-gray-300 bg-[#FFFFFF]">
       <div className="border border-b-gray-300">
         <nav className="container mx-auto flex items-center justify-between py-5 ">
           <div className="flex gap-2">
