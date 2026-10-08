@@ -5,7 +5,6 @@ export type ICategory = {
   slug: string;
   nameBn: string;
   icon: string;
-  category: string;
 };
 const NavCategroy = async () => {
   const res = await fetch(
@@ -27,7 +26,7 @@ const NavCategroy = async () => {
       {/* Mobile */}
       <div className="flex items-center justify-center gap-4 lg:hidden">
         {data.slice(0, 4).map((c: ICategory) => (
-          <Link href={`/category/${c.category}`} key={c.id}>
+          <Link href={`/categoryProduct/${c.slug}`} key={c.id}>
             <div className="flex items-center gap-1 whitespace-nowrap">
               <span>{c.icon}</span>
               <p className="text-sm hover:text-green-500 hover:underline">
@@ -41,7 +40,7 @@ const NavCategroy = async () => {
       {/* Desktop */}
       <div className="hidden items-center justify-center gap-6 lg:flex">
         {data.map((c: ICategory) => (
-          <Link href="/" key={c.id}>
+          <Link href={`/categoryProduct/${c.slug}`} key={c.id}>
             <div className="flex items-center gap-1 whitespace-nowrap">
               <span>{c.icon}</span>
               <p className="hover:text-green-500 hover:underline">{c.nameBn}</p>
