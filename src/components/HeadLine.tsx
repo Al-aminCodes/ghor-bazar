@@ -27,7 +27,6 @@ const HeadLine = async () => {
     throw new Error(`Failed to fetch categories: ${res.status}`);
   }
   const data: IProducat[] = await res.json();
-  console.log(data);
 
   return (
     <div className="flex gap-5 my-2 pl-2 border-b border-gray-300 bg-[#F0F5F0]">

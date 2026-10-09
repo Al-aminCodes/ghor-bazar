@@ -8,6 +8,7 @@ export default function Home() {
       <HeadLine />
       <main className="container mx-auto ">
         <HeroSction />
+
         <ProductHome />
       </main>
     </div>

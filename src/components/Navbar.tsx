@@ -11,13 +11,15 @@ const Navbar = () => {
         <nav className="container mx-auto flex items-center justify-between py-5 ">
           <div className="flex gap-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-600">
-              <Image
-                src={logo}
-                width={32}
-                height={32}
-                alt="Navbar logo"
-                className="object-contain"
-              />
+              <Link href={"/"}>
+                <Image
+                  src={logo}
+                  width={32}
+                  height={32}
+                  alt="Navbar logo"
+                  className="object-contain"
+                />
+              </Link>
             </div>
             <div className="hidden md:block">
               <h2 className="font-bold text-2xl text-black ">বাজার দর</h2>

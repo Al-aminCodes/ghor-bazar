@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export type ICategory = {
   id: string;
@@ -17,7 +18,8 @@ const NavCategroy = async () => {
   );
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch categories: ${res.status}`);
+    notFound();
+    // throw new Error(`Failed to fetch categories: ${res.status}`);
   }
   const data: ICategory[] = await res.json();
 

@@ -1,6 +1,5 @@
-import ProductCard from "@/components/ProductCard";
 import ProductList from "@/components/sortProduct";
-import React from "react";
+import { notFound } from "next/navigation";
 
 export type IProduct = {
   id: number;
@@ -45,7 +44,8 @@ const CategoryProducts = async ({
   );
 
   if (!productsRes.ok) {
-    throw new Error(`Failed to fetch products: ${productsRes.status}`);
+    notFound();
+    // throw new Error(`Failed to fetch products: ${productsRes.status}`);
   }
 
   const data: IProduct[] = await productsRes.json();
@@ -61,7 +61,8 @@ const CategoryProducts = async ({
   );
 
   if (!categoryRes.ok) {
-    throw new Error(`Failed to fetch category: ${categoryRes.status}`);
+    notFound();
+    // throw new Error(`Failed to fetch category: ${categoryRes.status}`);
   }
 
   const categoryData: CategoryData = await categoryRes.json();
