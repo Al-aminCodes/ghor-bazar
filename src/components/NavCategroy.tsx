@@ -1,57 +1,71 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
+"use client";
 
-export type ICategory = {
-  id: string;
-  slug: string;
-  nameBn: string;
-  icon: string;
+import { Suspense, useState } from "react";
+import { FiMenu, FiX } from "react-icons/fi";
+import CategoryLink, { type ICategory } from "./categoryLinks";
+
+type NavCategroyProps = {
+  categories?: ICategory[];
 };
-const NavCategroy = async () => {
-  const res = await fetch(
-    "https://api.api-store.workers.dev/api/bazardor/categories",
-    {
-      next: {
-        revalidate: 3600,
-      },
-    },
-  );
 
-  if (!res.ok) {
-    notFound();
-    // throw new Error(`Failed to fetch categories: ${res.status}`);
-  }
-  const data: ICategory[] = await res.json();
+function CategoryLinks({
+  categories,
+  onClick,
+}: {
+  categories: ICategory[];
+  onClick?: () => void;
+}) {
+  return (
+    <>
+      {categories.map((category) => (
+        <CategoryLink key={category.id} category={category} onClick={onClick} />
+      ))}
+    </>
+  );
+}
+
+export default function NavCategroy({ categories = [] }: NavCategroyProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="container mx-auto px-4 py-5">
-      {/* Mobile */}
-      <div className="flex items-center justify-center gap-4 lg:hidden">
-        {data.slice(0, 4).map((c: ICategory) => (
-          <Link href={`/categoryProduct/${c.slug}`} key={c.id}>
-            <div className="flex items-center gap-1 whitespace-nowrap">
-              <span>{c.icon}</span>
-              <p className="text-sm hover:text-green-500 hover:underline">
-                {c.nameBn}
-              </p>
-            </div>
-          </Link>
-        ))}
+    <nav className="w-full border-b border-gray-200 bg-white px-3 py-3">
+      {/* Mobile navigation */}
+      <div className="flex items-center gap-2 md:hidden">
+        <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto">
+          <Suspense fallback={<div className="h-9" />}>
+            <CategoryLinks categories={categories.slice(0, 3)} />
+          </Suspense>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          aria-label={isMenuOpen ? "Close categories" : "Open categories"}
+          aria-expanded={isMenuOpen}
+          className="shrink-0 rounded-lg border border-gray-200 p-2 hover:bg-green-100"
+        >
+          {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+        </button>
       </div>
 
-      {/* Desktop */}
-      <div className="hidden items-center justify-center gap-6 lg:flex">
-        {data.map((c: ICategory) => (
-          <Link href={`/categoryProduct/${c.slug}`} key={c.id}>
-            <div className="flex items-center gap-1 whitespace-nowrap">
-              <span>{c.icon}</span>
-              <p className="hover:text-green-500 hover:underline">{c.nameBn}</p>
-            </div>
-          </Link>
-        ))}
+      {/* Remaining mobile categories */}
+      {isMenuOpen && (
+        <div className="mt-3 grid grid-cols-2 gap-2 md:hidden">
+          <Suspense fallback={<div className="col-span-2 h-9" />}>
+            <CategoryLinks
+              categories={categories.slice(3)}
+              onClick={() => setIsMenuOpen(false)}
+            />
+          </Suspense>
+        </div>
+      )}
+
+      {/* Desktop navigation */}
+      <div className="hidden flex-wrap gap-2 md:flex">
+        <Suspense fallback={<div className="h-9" />}>
+          <CategoryLinks categories={categories} />
+        </Suspense>
       </div>
-    </div>
+    </nav>
   );
-};
-
-export default NavCategroy;
+}
