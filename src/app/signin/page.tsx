@@ -1,10 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { signIn } from "@/lib/auth-client";
 import { Button, FieldError, Input, Label, TextField } from "@heroui/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function SignInPage() {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -26,28 +31,47 @@ export default function SignInPage() {
     }
 
     try {
-      // Better Auth
-      //
-      // const { data, error } = await signIn.email({
-      //   email,
-      //   password,
-      // });
-      //
-      // if (error) {
-      //   setErrorMessage(error.message);
-      //   return;
-      // }
-
-      console.log({
+      const { data, error } = await signIn.email({
         email,
         password,
+        callbackURL: "/",
       });
+
+      if (error) {
+        const message = error.message ?? "সাইন ইন করতে সমস্যা হয়েছে";
+
+        setErrorMessage(message);
+        toast.error(message);
+        return;
+      }
+
+      if (data) {
+        toast.success("সফলভাবে সাইন ইন হয়েছে!");
+
+        router.push("/");
+        router.refresh();
+      }
     } catch (error) {
-      console.error(error);
-      setErrorMessage("সাইন ইন করতে সমস্যা হয়েছে");
+      console.error("Signin error:", error);
+
+      const message = "কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
+  };
+  const hendelGoogleSignIn = async () => {
+    const data = await signIn.social({
+      provider: "google",
+    });
+    toast.success("সফলভাবে সাইন ইন হয়েছে!");
+  };
+  const hendelGithubSignIn = async () => {
+    const data = await signIn.social({
+      provider: "github",
+    });
   };
 
   return (
@@ -126,6 +150,7 @@ export default function SignInPage() {
             {/* Google */}
             <Button
               type="button"
+              onClick={hendelGoogleSignIn}
               className="h-11 rounded-lg border border-[#dfe7e1] bg-white text-sm font-medium text-[#354139] shadow-none transition-all hover:border-[#c5d2c9] hover:bg-[#f8faf8]"
             >
               <span className="font-bold text-[#4285F4]">G</span>
@@ -135,6 +160,7 @@ export default function SignInPage() {
             {/* Github */}
             <Button
               type="button"
+              onClick={hendelGithubSignIn}
               className="h-11 rounded-lg border border-[#dfe7e1] bg-white text-sm font-medium text-[#354139] shadow-none transition-all hover:border-[#c5d2c9] hover:bg-[#f8faf8]"
             >
               <span className="font-bold text-[#26332b]">●</span>

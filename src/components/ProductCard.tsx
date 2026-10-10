@@ -28,6 +28,7 @@ type ProductCardProps = {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const isDown = product.change.dir === "down";
+  const isFlat = product.change.pct === 0;
 
   return (
     <Link href={`/details/${product.id}`}>
@@ -46,14 +47,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <h3 className="text-lg font-bold leading-tight text-slate-800">
                 {product.nameBn}
               </h3>
-
               <p className="mt-1 text-sm text-slate-500">
                 প্রতি{" "}
                 {product.unit === "kg"
                   ? "কেজি"
                   : product.unit === "piece"
                     ? "পিস"
-                    : product.unit}
+                    : product.unit === "litre"
+                      ? "লিটার"
+                      : product.unit === "dozen"
+                        ? " ডজন"
+                        : product.unit}
               </p>
             </div>
           </div>
@@ -73,11 +77,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Price change */}
           <div
             className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold ${
-              isDown ? "bg-green-50 text-green-600" : "bg-red-50 text-red-500"
+              isFlat
+                ? "bg-gray-100 text-gray-500"
+                : isDown
+                  ? "bg-red-50 text-red-500"
+                  : "bg-green-50 text-green-600"
             }`}
           >
-            {isDown ? <FaSortDown size={12} /> : <FaCaretUp size={12} />}
-            {Math.abs(product.change.pct)}%
+            {isFlat ? (
+              <span>—</span>
+            ) : isDown ? (
+              <FaSortDown size={12} />
+            ) : (
+              <FaCaretUp size={12} />
+            )}
+            {Math.abs(product.change.pct).toLocaleString("bn-BD")}%
           </div>
         </div>
       </div>

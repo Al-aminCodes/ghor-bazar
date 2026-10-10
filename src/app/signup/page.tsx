@@ -1,10 +1,14 @@
 "use client";
 
-import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { signIn, signUp } from "@/lib/auth-client";
 import { Button, FieldError, Input, Label, TextField } from "@heroui/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -16,49 +20,81 @@ export default function SignupPage() {
 
     const formData = new FormData(event.currentTarget);
 
-    const name = formData.get("name")?.toString().trim();
-    const email = formData.get("email")?.toString().trim();
-    const password = formData.get("password")?.toString();
-    const confirmPassword = formData.get("confirmPassword")?.toString();
+    const name = formData.get("name")?.toString().trim() ?? "";
+    const email = formData.get("email")?.toString().trim() ?? "";
+    const image = formData.get("image")?.toString().trim() ?? "";
+    const password = formData.get("password")?.toString() ?? "";
+    const confirmPassword = formData.get("confirmPassword")?.toString() ?? "";
 
-    // Check password
+    if (!name || !email || !password || !confirmPassword) {
+      setErrorMessage("সবগুলো তথ্য পূরণ করুন");
+      setLoading(false);
+      return;
+    }
+
     if (password !== confirmPassword) {
       setErrorMessage("পাসওয়ার্ড দুটি একই নয়");
       setLoading(false);
       return;
     }
 
-    if (!name || !email || !password) {
-      setErrorMessage("সবগুলো তথ্য পূরণ করুন");
-      setLoading(false);
-      return;
-    }
-
     try {
-      // এখানে আপনার Better Auth signup code বসাবেন
-      console.log({
+      const { data, error } = await signUp.email({
         name,
         email,
         password,
+        image: image || undefined,
+        callbackURL: "/",
       });
 
-      // Example:
-      //
-      // const { data, error } = await signUp.email({
-      //   name,
-      //   email,
-      //   password,
-      // });
-      //
-      // if (error) {
-      //   setErrorMessage(error.message);
-      //   return;
-      // }
+      // Better Auth may return an error without throwing.
+      if (error) {
+        const message =
+          error.message || "অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।";
+
+        setErrorMessage(message);
+        toast.error(message);
+        return;
+      }
+
+      if (data) {
+        toast.success("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!");
+
+        router.push("/");
+        router.refresh();
+      }
     } catch (error) {
-      console.error(error);
-      setErrorMessage("কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      console.error("Signup error:", error);
+
+      const message = "কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setLoading(false);
+    }
+  };
+  const handleGoogleSignIn = async () => {
+    try {
+      await signIn.social({
+        provider: "google",
+        callbackURL: "/?auth=success",
+      });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      toast.error("Google দিয়ে সাইন ইন করা যায়নি");
+    }
+  };
+
+  const handleGithubSignIn = async () => {
+    try {
+      await signIn.social({
+        provider: "github",
+        callbackURL: "/?auth=success",
+      });
+    } catch (error) {
+      console.error("GitHub sign-in error:", error);
+      toast.error("GitHub দিয়ে সাইন ইন করা যায়নি");
     }
   };
 
@@ -106,6 +142,15 @@ export default function SignupPage() {
 
               <FieldError className="mt-1 text-xs text-red-500" />
             </TextField>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              ImageURL
+            </label>
+            <input
+              name="image"
+              type="url"
+              className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition focus:border-green-500"
+              placeholder="Image"
+            />
 
             {/* Password */}
             <TextField name="password" type="password" isRequired>
@@ -165,6 +210,7 @@ export default function SignupPage() {
           <div className="grid grid-cols-2 gap-3">
             <Button
               type="button"
+              onClick={handleGoogleSignIn}
               className="h-11 rounded-lg border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
               <span className="text-base font-bold">G</span>
@@ -173,6 +219,7 @@ export default function SignupPage() {
 
             <Button
               type="button"
+              onClick={handleGithubSignIn}
               className="h-11 rounded-lg border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
               <span className="text-base font-bold">⌘</span>

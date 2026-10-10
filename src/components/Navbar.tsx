@@ -3,6 +3,8 @@ import Link from "next/link";
 import logo from "../assets/logo-icon.png";
 import BanglaDate from "./BangleDate";
 import NavCategroy from "./NavCategroy";
+import ButtonHandler from "./navButton";
+import HeadLine from "./HeadLine";
 
 const Navbar = () => {
   return (
@@ -29,23 +31,14 @@ const Navbar = () => {
           </div>
           <div className="flex gap-2">
             {" "}
-            <Link href={"/signin"}>
-              <button className="btn btn-ghost text-neutral-700 transition-colors hover:text-green-700">
-                সাইন ইন
-              </button>
-            </Link>
-            <Link href={"/signup"}>
-              {" "}
-              <button className="btn  bg-green-700 px-3 py-1.5 font-semibold text-white transition-colors hover:bg-green-800 rounded-xl">
-                সাইন আপ
-              </button>
-            </Link>
+            <ButtonHandler></ButtonHandler>
           </div>
         </nav>
 
         {/* <HeaderLink /> */}
       </div>
       <NavCategroy />
+      <HeadLine />
     </div>
   );
 };

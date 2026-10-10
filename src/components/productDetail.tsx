@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronRight, TrendingUp, TrendingDown } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { FaCaretUp, FaSortDown } from "react-icons/fa6";
 
 type Market = {
   market: string;
@@ -42,7 +43,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     }))
     .sort((a, b) => a.avg - b.avg);
 
-  const isUp = product.change.dir === "up";
+  const isDown = product.change.dir === "down";
+  const isFlat = product.change.pct === 0;
 
   return (
     <main className="min-h-screen bg-base-200/40 py-4 md:py-6">
@@ -104,9 +106,19 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   <h1 className="text-2xl font-bold text-base-content md:text-3xl">
                     {product.nameBn}
                   </h1>
-
-                  <p className="mt-1 text-sm text-base-content/60">
-                    {product.categoryNameBn} · {product.unit}
+                  <p className="mt-1 text-sm text-slate-500">
+                    প্রতি{" "}
+                    {product.unit === "kg"
+                      ? "কেজি"
+                      : product.unit === "piece"
+                        ? "পিস"
+                        : product.unit === "litre"
+                          ? "লিটার"
+                          : product.unit === "dozen"
+                            ? " ডজন"
+                            : product.unit}
+                    {" - "}
+                    <span>{product.categoryNameBn}</span>
                   </p>
 
                   <p className="mt-2 text-sm text-base-content/70">
@@ -126,12 +138,22 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 </p>
 
                 <div
-                  className={`mt-2 flex items-center justify-center gap-1 text-xs font-semibold ${
-                    isUp ? "text-error" : "text-success"
+                  className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold ${
+                    isFlat
+                      ? "bg-gray-100 text-gray-500"
+                      : isDown
+                        ? "bg-red-50 text-red-500"
+                        : "bg-green-50 text-green-600"
                   }`}
                 >
-                  {isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                  {isUp ? "▲" : "▼"} {product.change.pct}%
+                  {isFlat ? (
+                    <span>—</span>
+                  ) : isDown ? (
+                    <FaSortDown size={12} />
+                  ) : (
+                    <FaCaretUp size={12} />
+                  )}
+                  {Math.abs(product.change.pct).toLocaleString("bn-BD")}%
                 </div>
               </div>
             </div>
