@@ -1,7 +1,14 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
-const client = new MongoClient(process.env.MONGODB_URL as string);
+
+const databaseUrl = process.env.MONGODB_URL;
+
+if (!databaseUrl) {
+  throw new Error("MONGODB_URL is missing from environment variables");
+}
+
+const client = new MongoClient(databaseUrl);
 const db = client.db("bazar-dhor-db");
 export const auth = betterAuth({
   emailAndPassword: {
